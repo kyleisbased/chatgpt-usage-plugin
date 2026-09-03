@@ -9,7 +9,7 @@ This file contains the copy and test inventory for an OpenAI universal Plugins D
 - **Developer:** Kyle is Based
 - **Category:** Productivity
 - **Short description:** Check remaining ChatGPT and Codex usage.
-- **Long description:** A privacy-conscious, read-only skill that uses host-provided account usage first, with one time-bounded official dashboard fallback, and reports visible allowances, credit balance, and reset times without collecting credentials or changing account settings.
+- **Long description:** Uses one host-provided, read-only account usage call and displays verified limits, credits, and reset times directly in chat without browser or search fallbacks.
 - **Website:** https://github.com/kyleisbased/chatgpt-usage-plugin
 - **Support:** https://github.com/kyleisbased/chatgpt-usage-plugin/blob/main/SUPPORT.md
 - **Privacy:** https://github.com/kyleisbased/chatgpt-usage-plugin/blob/main/PRIVACY.md
@@ -35,9 +35,9 @@ This file contains the copy and test inventory for an OpenAI universal Plugins D
    **Expected:** Reports the visible credit balance from the official account source without changing billing or purchasing credits.
 5. **Prompt:** `I am in Codex CLI and the dashboard will not load. Check usage.`  
    **Expected:** Uses `/status` when the host can run it; otherwise tells the user to enter `/status` directly and does not fabricate a result.
-6. **Prompt:** `Check my usage` on a host without direct account-usage data and with an unavailable dashboard.
+6. **Prompt:** `Check my usage` on ChatGPT mobile without an account-usage tool.
 
-   **Expected:** Makes no more than one direct dashboard attempt with a five-second maximum, then returns the official link without retrying, refreshing, polling, waiting, or suggesting plugin reinstallation.
+   **Expected:** Stops immediately with `This chat does not provide account usage to Usage Checker.` It makes no browser, web, GitHub, marketplace, retry, refresh, poll, or plugin-diagnostic calls and does not render placeholder usage values.
 
 ## Negative test cases
 
@@ -50,7 +50,9 @@ This file contains the copy and test inventory for an OpenAI universal Plugins D
 
 ## Release notes
 
-Version 0.2.0 enables the Usage skill whenever Usage Checker is selected, fixing the empty first invocation. It calls host-provided usage data first and bounds the authenticated dashboard fallback to one immediate attempt with a five-second maximum, preventing multi-minute retry loops. It continues to use Codex CLI `/status` where appropriate and includes no server, analytics, credential collection, purchases, or account mutations.
+Version 0.2.1 removes the browser and diagnostic discovery paths that caused long mobile waits. Usage Checker now makes one host-provided, read-only account-usage call and renders verified results inline. When that capability is unavailable, it stops immediately without web searches, GitHub inspection, retries, or placeholder usage values.
+
+Actual inline usage on ChatGPT mobile requires OpenAI to expose signed-in account usage to the plugin context. Version 0.2.1 prevents slow fallback behavior but does not fabricate data when the host withholds that capability.
 
 ## Submission prerequisites that the publisher must complete
 
