@@ -80,6 +80,27 @@ class UsageCheckerContractTests(unittest.TestCase):
             for phrase in phrases:
                 self.assertIn(phrase, lowered, f"{path.name} must contain {phrase!r}")
 
+    def test_public_docs_remove_obsolete_universal_at_instructions(self):
+        obsolete_universal_instructions = {
+            README: [
+                "enter `@usage checker` or select usage checker and enter `usage`.",
+            ],
+            SUBMISSION: [
+                "select `@usage checker` in a chatgpt mobile remote conversation.",
+                "then invoke `@usage checker` from a remote conversation.",
+            ],
+        }
+
+        for path, phrases in obsolete_universal_instructions.items():
+            lowered = path.read_text(encoding="utf-8").lower()
+            for phrase in phrases:
+                with self.subTest(path=path.name, phrase=phrase):
+                    self.assertNotIn(
+                        phrase,
+                        lowered,
+                        f"{path.name} must replace obsolete universal instruction {phrase!r}",
+                    )
+
     def test_mobile_path_forbids_diagnostic_fallbacks(self):
         instructions = SKILL.read_text(encoding="utf-8").lower()
 
