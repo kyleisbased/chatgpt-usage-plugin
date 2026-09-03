@@ -36,6 +36,50 @@ class UsageCheckerContractTests(unittest.TestCase):
             "selecting Usage Checker must load its only skill on the first request",
         )
 
+    def test_remote_codex_default_prompt_uses_canonical_dollar_command(self):
+        metadata = OPENAI_YAML.read_text(encoding="utf-8")
+
+        match = re.search(
+            r'(?m)^\s+default_prompt:\s*"([^"]+)"\s*$',
+            metadata,
+        )
+
+        self.assertIsNotNone(match, "openai.yaml must declare a default prompt")
+        self.assertIn(
+            "$usage",
+            match.group(1),
+            "Remote Codex must present $usage as the canonical command",
+        )
+
+    def test_skill_distinguishes_invocation_by_remote_surface(self):
+        instructions = SKILL.read_text(encoding="utf-8").lower()
+
+        for phrase in [
+            "in a remote codex conversation, enter `$usage`",
+            "in a remote chatgpt or chatgpt work conversation, select `@usage checker`",
+            "natural-language requests can invoke this skill implicitly",
+        ]:
+            self.assertIn(phrase, instructions)
+
+    def test_public_docs_distinguish_remote_invocation_by_surface(self):
+        required_phrases = {
+            README: [
+                "in a remote codex conversation, enter `$usage`",
+                "in a remote chatgpt or chatgpt work conversation, select `@usage checker`",
+                "you can also ask naturally, for example `check my usage`",
+            ],
+            SUBMISSION: [
+                "`$usage` in a remote codex conversation",
+                "`@usage checker` in a remote chatgpt or chatgpt work conversation",
+                "natural-language requests such as `check my usage` can invoke the skill implicitly",
+            ],
+        }
+
+        for path, phrases in required_phrases.items():
+            lowered = path.read_text(encoding="utf-8").lower()
+            for phrase in phrases:
+                self.assertIn(phrase, lowered, f"{path.name} must contain {phrase!r}")
+
     def test_mobile_path_forbids_diagnostic_fallbacks(self):
         instructions = SKILL.read_text(encoding="utf-8").lower()
 
