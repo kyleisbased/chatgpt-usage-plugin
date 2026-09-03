@@ -1,38 +1,32 @@
 ---
 name: usage
-description: Use when the signed-in user asks for current ChatGPT Work or Codex subscription usage, remaining allowances, credit balance, or reset times. Do not use for OpenAI API billing or token analytics.
+description: Use when the signed-in user asks for current ChatGPT Work or Codex subscription usage, remaining allowances, credit balance, or reset times. On mobile, live checks require a ChatGPT Remote conversation connected to a desktop Codex host. Do not use for OpenAI API billing or token analytics.
 ---
 
 # Account Usage
 
-Report current ChatGPT Work and Codex subscription usage from the signed-in user's official account. This is a read-only, latency-sensitive workflow.
+Report current ChatGPT Work and Codex subscription usage from the signed-in user's connected host. This is a read-only, latency-sensitive workflow.
 
-## Mobile-first execution
+## Remote-first execution
 
-This workflow has one data path. If the host exposes a dedicated signed-in account-usage or usage-limits tool, call it exactly once and answer from that result.
+This workflow has one data path. If this ChatGPT Remote conversation exposes a dedicated signed-in account-usage or usage-limits tool, make a host-native, read-only account-usage call. Call it exactly once and answer from that result.
 
-Do not browse. Do not search the web. Do not inspect GitHub. Do not search for the plugin. Do not open an account dashboard. Do not retry, refresh, poll, or wait. Do not start interactive sign-in. Do not attempt to discover, install, reload, repair, or diagnose plugin capabilities.
+Do not browse. Do not search the web. Do not inspect GitHub. Do not search for the plugin. Do not open an account dashboard. Do not retry, refresh, poll, or wait. Do not start interactive sign-in. Do not attempt to discover, install, reload, repair, or diagnose plugin capabilities. Do not use shell or computer-use tools.
 
-If no signed-in account-usage tool is available, stop immediately. Say: `This chat does not provide account usage to Usage Checker.` Do not render an empty or `Not shown` table and do not claim that zero usage was found.
+If no signed-in account-usage tool is available, stop immediately. Say exactly: `Usage Checker needs a ChatGPT Remote conversation connected to a running desktop Codex host.` Do not call any tool on this path. Do not render an empty or `Not shown` table and do not claim that zero usage was found.
 
-In Codex CLI only, `/status` remains the separate native way for the user to inspect limits. Do not route ChatGPT mobile users to CLI instructions.
+If the single native call fails, stop. Say: `Usage Checker could not read usage from the connected host.` Include a short host-provided error only when it is safe and useful. Do not make a second call or try another source.
 
 Do not use `platform.openai.com/usage` unless the user specifically asks about metered OpenAI API usage or spend. API billing is separate from ChatGPT Work and Codex subscription usage.
 
 ## Capability and privacy
 
-If the host cannot return verified signed-in usage data, stop immediately. Say: `This chat does not provide account usage to Usage Checker.` Never request credentials or attempt authentication. Do not inspect unrelated personal data or modify account settings.
+Use only account data returned by the native usage tool. Never request credentials or attempt authentication. Do not inspect unrelated account data, conversations, files, browser tabs, or desktop content. Do not modify account settings, buy credits, or consume usage-reset credits.
 
 ## Report
 
-Read only values visibly shown by the source. Preserve the dashboard's exact distinction between **used**, **remaining**, and **left**. Include every displayed allowance that applies, such as:
+Only render a result after the verified native account-usage tool returns data. Include every returned usage bucket, its label, `usedPercent`, window duration, and reset time. Include plan and credits only when the source supplies them.
 
-- plan or workspace, when shown;
-- rolling or session limit and its reset time;
-- weekly limit and its reset time;
-- included or purchased credit balance;
-- any other usage bucket visibly listed.
+Return a compact table with `Allowance`, `Used`, `Remaining`, and `Resets` columns. If the source supplies only `usedPercent`, `remainingPercent = 100 - usedPercent` may be the only permitted calculated value; label it `calculated`. Do not calculate or infer any other missing value. Omit unavailable cells or columns instead of displaying placeholders.
 
-Return a compact table with `Allowance`, `Amount`, and `Resets` columns. Add the source and the time checked. Use the timezone displayed by the dashboard; if none is shown, state that the timezone was not provided.
-
-Only render the table after a verified account-usage tool returns data. Preserve the source's exact distinction between **used**, **remaining**, and **left**. Do not calculate or infer missing values. Include the source and check time.
+Add `Source: connected Codex host` and the local check time. Preserve the source's exact distinction between used and remaining values.
