@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "plugins" / "usage-checker"
 SKILL = PLUGIN / "skills" / "usage" / "SKILL.md"
 OPENAI_YAML = PLUGIN / "skills" / "usage" / "agents" / "openai.yaml"
+MANIFEST = PLUGIN / ".codex-plugin" / "plugin.json"
 
 
 class UsageCheckerContractTests(unittest.TestCase):
@@ -26,28 +27,34 @@ class UsageCheckerContractTests(unittest.TestCase):
             "selecting Usage Checker must load its only skill on the first request",
         )
 
-    def test_browser_fallback_is_bounded_to_one_immediate_attempt(self):
+    def test_mobile_path_forbids_diagnostic_fallbacks(self):
         instructions = SKILL.read_text(encoding="utf-8").lower()
 
-        self.assertRegex(instructions, r"at most one (?:direct )?browser attempt")
-        self.assertIn("5 seconds", instructions)
-        self.assertIn("do not retry, refresh, poll, or wait", instructions)
-        self.assertIn("do not start an interactive sign-in", instructions)
-        self.assertIn("fail fast", instructions)
+        required = [
+            "do not browse",
+            "do not search the web",
+            "do not inspect github",
+            "do not search for the plugin",
+            "do not retry, refresh, poll, or wait",
+        ]
+        for phrase in required:
+            self.assertIn(phrase, instructions)
 
-    def test_native_usage_source_precedes_browser_fallback(self):
+        self.assertNotIn("browser attempt", instructions)
+
+    def test_missing_source_stops_without_placeholder_usage(self):
         instructions = SKILL.read_text(encoding="utf-8").lower()
 
-        native_source = instructions.find("host-provided account-usage")
-        browser_fallback = instructions.find("authenticated browser")
+        self.assertIn("stop immediately", instructions)
+        self.assertIn("do not render an empty or `not shown` table", instructions)
+        self.assertIn("this chat does not provide account usage", instructions)
 
-        self.assertGreaterEqual(native_source, 0)
-        self.assertGreaterEqual(browser_fallback, 0)
-        self.assertLess(native_source, browser_fallback)
+    def test_mobile_reliability_release_is_0_2_1(self):
+        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        self.assertEqual("0.2.1", manifest["version"])
 
     def test_plugin_manifest_points_to_an_existing_skill_directory(self):
-        manifest_path = PLUGIN / ".codex-plugin" / "plugin.json"
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
         skills_path = (PLUGIN / manifest["skills"]).resolve()
 
         self.assertTrue(skills_path.is_dir())
