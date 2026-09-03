@@ -1,6 +1,6 @@
 # ChatGPT Usage Plugin
 
-A privacy-conscious, read-only plugin that reports current ChatGPT Work and Codex subscription usage from OpenAI's official usage dashboard.
+A privacy-conscious, read-only plugin that reports current ChatGPT Work and Codex subscription usage through the fastest verified source available to the host.
 
 ## Use it
 
@@ -8,11 +8,11 @@ A privacy-conscious, read-only plugin that reports current ChatGPT Work and Code
 - Codex: invoke `$usage`.
 - Codex CLI already has a built-in `/status` command; this skill uses it as a fallback when the dashboard is unavailable.
 
-The report preserves whether the source labels a number as **used**, **remaining**, or **left**, and includes visible reset times and credit balances. It never asks for passwords, cookies, access tokens, API keys, or two-factor codes.
+The plugin now loads its Usage skill as soon as Usage Checker is selected. It uses host-provided usage data first, avoids opening a browser when a direct usage tool is available, and limits the dashboard fallback to one immediate attempt. The report preserves whether the source labels a number as **used**, **remaining**, or **left**, and includes visible reset times and credit balances. It never asks for passwords, cookies, access tokens, API keys, or two-factor codes.
 
 ## Data source
 
-The primary source is the signed-in account page at:
+The primary source is account-usage data supplied directly by the host. If that is unavailable, the plugin can make one immediate attempt to read the signed-in account page at:
 
 https://chatgpt.com/codex/settings/usage
 
@@ -46,6 +46,8 @@ GitHub marketplaces cannot be added directly from the ChatGPT mobile app. Native
 - a ChatGPT workspace administrator imports this GitHub marketplace and gives your role access.
 
 Once the plugin appears for your account, install it from the mobile Plugins directory, start a new chat, and invoke `@usage`.
+
+Version 0.2.0 removes the first-invocation gap and prevents repeated dashboard loading. A successful check is normally limited by the host's direct usage lookup. When that capability is unavailable, the plugin gives the dashboard fallback a five-second maximum and then returns the official link instead of waiting or retrying for minutes.
 
 Until the public listing is approved, you can still use the PC installation from a phone through your own remote-terminal setup and enter `$usage` in Codex CLI.
 

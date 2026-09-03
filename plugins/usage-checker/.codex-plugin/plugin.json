@@ -1,7 +1,7 @@
 {
   "name": "usage-checker",
-  "version": "0.1.0",
-  "description": "Check current ChatGPT Work and Codex account usage from the official dashboard.",
+  "version": "0.2.0",
+  "description": "Check current ChatGPT Work and Codex account usage through the fastest verified source.",
   "author": {
     "name": "Kyle is Based",
     "url": "https://github.com/kyleisbased"
@@ -14,7 +14,7 @@
   "interface": {
     "displayName": "Usage Checker",
     "shortDescription": "Check remaining ChatGPT and Codex usage.",
-    "longDescription": "A read-only skill that checks the official usage dashboard and reports current allowances, credits, and reset times without collecting credentials.",
+    "longDescription": "A read-only skill that uses host-provided usage data first, with one time-bounded official dashboard fallback, and reports current allowances, credits, and reset times without collecting credentials.",
     "developerName": "Kyle is Based",
     "category": "Productivity",
     "capabilities": ["Read"],
