@@ -1,0 +1,6 @@
+interface:
+  display_name: "Usage"
+  short_description: "Check current ChatGPT and Codex usage"
+  default_prompt: "Use $usage to check my current account usage."
+policy:
+  allow_implicit_invocation: false
