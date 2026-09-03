@@ -20,17 +20,21 @@
 2. Show my remaining limits and reset times from this Remote host.
 3. How many credits does this connected host report?
 
+In a Remote Codex conversation, use `$usage`. In a Remote ChatGPT or ChatGPT Work conversation, select `@Usage Checker`. Natural-language requests such as `check my usage` can invoke the skill implicitly.
+
 ## Positive review cases
 
-1. **Prompt:** Select `@Usage Checker` in a ChatGPT mobile Remote conversation.
+1. **Prompt:** `$usage` in a Remote Codex conversation.
    **Expected:** Makes one native account-usage call on the connected host and displays every verified returned limit inline.
-2. **Prompt:** `Show my weekly Codex allowance and reset time.`
+2. **Prompt:** `@Usage Checker` in a Remote ChatGPT or ChatGPT Work conversation.
+   **Expected:** Loads the Usage skill and makes one native account-usage call on the connected host.
+3. **Prompt:** `Show my weekly Codex allowance and reset time.`
    **Expected:** Reports the returned weekly limit and reset time without browsing or calling another source.
-3. **Prompt:** `Show all limits and credits.`
+4. **Prompt:** `Show all limits and credits.`
    **Expected:** Displays every returned usage bucket and credits when supplied; unavailable fields are omitted.
-4. **Prompt:** `Check my usage` where the native account-usage tool is absent.
+5. **Prompt:** `Check my usage` where the native account-usage tool is absent.
    **Expected:** Makes no tool or fallback call and says exactly `Usage Checker needs a ChatGPT Remote conversation connected to a running desktop Codex host.`
-5. **Prompt:** `Check my usage` when the one native usage call returns an error.
+6. **Prompt:** `Check my usage` when the one native usage call returns an error.
    **Expected:** Stops after that call, reports that usage could not be read from the connected host, and does not retry.
 
 ## Negative review cases
@@ -46,7 +50,7 @@
 
 ## Release notes
 
-Version 0.3.0 makes ChatGPT Remote the supported mobile path. Pair the phone with a running desktop ChatGPT/Codex host once, then invoke `@Usage Checker` from a Remote conversation. The plugin performs one native, read-only usage call and displays verified limits inline without browser or search fallbacks. Unsupported cloud-only conversations now receive immediate Remote guidance.
+Version 0.3.0 makes ChatGPT Remote the supported mobile path. Pair the phone with a running desktop ChatGPT/Codex host once, then enter `$usage` in Remote Codex or select `@Usage Checker` in Remote ChatGPT/Work. Natural-language usage requests remain supported. The plugin performs one native, read-only usage call and displays verified limits inline without browser or search fallbacks. Unsupported cloud-only conversations now receive immediate Remote guidance.
 
 Usage Checker has no hosted service and does not collect credentials or usage history. End-to-end response time depends on ChatGPT, the network, Remote transport, and host state; the plugin adds no deliberate wait or retry.
 

@@ -2,11 +2,11 @@
 
 ## Status
 
-Approved in chat on September 3, 2026. This specification supersedes the host assumptions in `2026-09-02-mobile-inline-usage-design.md`.
+Approved in chat on September 3, 2026, then amended to distinguish Remote Codex invocation from Remote ChatGPT/Work invocation. This specification supersedes the host assumptions in `2026-09-02-mobile-inline-usage-design.md`.
 
 ## Goal
 
-Let a user check current ChatGPT/Codex subscription usage from the ChatGPT mobile app by entering `@Usage Checker` in a Remote conversation connected to the user's own Mac or Windows host. The result appears inline after one native, read-only usage call. The design must not use a hosted Usage Checker backend, Cloudflare, browser automation, or credentials collected by the plugin publisher.
+Let a user check current ChatGPT/Codex subscription usage from the ChatGPT mobile app in a Remote conversation connected to the user's own Mac or Windows host. In Remote Codex the canonical command is `$usage`; in Remote ChatGPT or ChatGPT Work the user selects `@Usage Checker`. Equivalent natural-language requests can invoke the skill implicitly. The result appears inline after one native, read-only usage call. The design must not use a hosted Usage Checker backend, Cloudflare, browser automation, or credentials collected by the plugin publisher.
 
 ## Supported user experience
 
@@ -24,7 +24,7 @@ This pairing is OpenAI's Remote connection setup, not a separate Usage Checker a
 
 1. Open **Remote** in the ChatGPT mobile app.
 2. Open or start a ChatGPT/Codex conversation on the connected host.
-3. Enter `@Usage Checker` or select the plugin and enter `usage`.
+3. In Remote Codex, enter `$usage`. In Remote ChatGPT or ChatGPT Work, select `@Usage Checker`. The user may also ask naturally, for example `check my usage`.
 4. Usage Checker requests the host's native account-usage capability exactly once.
 5. The response shows the returned limits, credits, and reset times directly in the conversation.
 
@@ -66,7 +66,11 @@ The plugin must consume only fields returned by the tool. It must never infer mi
 
 ## Invocation and routing
 
-`@Usage Checker` is the canonical mobile invocation because it explicitly selects the plugin. When Usage Checker is already active in the Remote conversation, `usage`, `check usage`, and equivalent natural-language requests may invoke the same workflow.
+Invocation depends on the Remote conversation surface:
+
+- **Remote Codex:** `$usage` is the canonical explicit command.
+- **Remote ChatGPT or ChatGPT Work:** `@Usage Checker` is the canonical explicit selection.
+- **Either supported surface:** `usage`, `check my usage`, and equivalent natural-language requests may invoke the skill implicitly.
 
 The skill must distinguish two environments:
 
@@ -151,7 +155,7 @@ The implementation should reuse the existing one-call/fail-fast work on `codex/m
 
 Tests must establish that:
 
-1. `@Usage Checker` and usage-language prompts route to the usage skill.
+1. `$usage` routes to the skill in Remote Codex, `@Usage Checker` routes to it in Remote ChatGPT/Work, and usage-language prompts can route implicitly.
 2. The successful path permits exactly one native account-usage call.
 3. Browser, web, GitHub, marketplace, plugin-discovery, retry, refresh, and polling behavior are prohibited.
 4. Missing capability produces the exact Remote guidance sentence.
@@ -165,7 +169,7 @@ Test on at least one Android or iOS phone paired to a Windows or macOS host:
 
 1. Install the candidate plugin on the signed-in account.
 2. Pair the phone through ChatGPT Remote.
-3. Invoke `@Usage Checker` in a Remote conversation on the first attempt.
+3. Invoke `$usage` in a Remote Codex conversation on the first attempt, then verify `@Usage Checker` in a Remote ChatGPT or ChatGPT Work conversation when that surface is available.
 4. Confirm one native usage call and an inline result matching the connected host's account.
 5. Repeat at least five warm checks and record elapsed time.
 6. Disconnect the host and confirm ChatGPT Remote reports the connection problem without Usage Checker browsing or searching.
@@ -185,7 +189,7 @@ Publication must not claim ordinary mobile-chat access or guaranteed latency. Th
 
 ## Success criteria
 
-- A correctly paired user can invoke `@Usage Checker` from ChatGPT mobile Remote and receive verified usage inline on the first attempt.
+- A correctly paired user can enter `$usage` in Remote Codex or select `@Usage Checker` in Remote ChatGPT/Work and receive verified usage inline on the first attempt.
 - The plugin performs no browser or internet search and never takes the user away from ChatGPT.
 - The plugin adds only one native usage read to the normal model response latency.
 - Users outside the supported Remote path receive one immediate, actionable sentence.

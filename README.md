@@ -23,7 +23,10 @@ Remote availability can depend on OpenAI rollout and workspace administrator pol
 
 1. Open **Remote** in the ChatGPT mobile app.
 2. Open or start a conversation on the connected desktop host.
-3. Enter `@Usage Checker` or select Usage Checker and enter `usage`.
+3. Use the invocation for that conversation:
+   - In a Remote Codex conversation, enter `$usage`.
+   - In a Remote ChatGPT or ChatGPT Work conversation, select `@Usage Checker`.
+   - You can also ask naturally, for example `check my usage`.
 
 The result appears inline. Usage Checker does not open a browser, search the web, retry, or take you away from ChatGPT.
 
@@ -40,7 +43,7 @@ codex plugin marketplace add kyleisbased/chatgpt-usage-plugin
 codex plugin add usage-checker@kyleisbased
 ```
 
-Start a new Codex session and invoke `$usage`. GitHub installation is for development; phone access uses ChatGPT Remote to the configured host.
+Start a new Codex session and invoke `$usage`. GitHub installation is for development; phone access uses ChatGPT Remote to the configured host. Regular users should install the public plugin so the Usage skill is available on that host.
 
 ## Data and security
 

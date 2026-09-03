@@ -7,6 +7,12 @@ description: Use when the signed-in user asks for current ChatGPT Work or Codex 
 
 Report current ChatGPT Work and Codex subscription usage from the signed-in user's connected host. This is a read-only, latency-sensitive workflow.
 
+## Invocation
+
+- In a Remote Codex conversation, enter `$usage`.
+- In a Remote ChatGPT or ChatGPT Work conversation, select `@Usage Checker`.
+- Natural-language requests can invoke this skill implicitly, such as `check my usage`.
+
 ## Remote-first execution
 
 This workflow has one data path. If this ChatGPT Remote conversation exposes a dedicated signed-in account-usage or usage-limits tool, make a host-native, read-only account-usage call. Call it exactly once and answer from that result.
