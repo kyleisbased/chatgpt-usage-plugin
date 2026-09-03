@@ -18,6 +18,12 @@
     "developerName": "Kyle is Based",
     "category": "Productivity",
     "capabilities": ["Read"],
+    "websiteURL": "https://github.com/kyleisbased/chatgpt-usage-plugin",
+    "privacyPolicyURL": "https://github.com/kyleisbased/chatgpt-usage-plugin/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/kyleisbased/chatgpt-usage-plugin/blob/main/TERMS.md",
+    "brandColor": "#10A37F",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png",
     "defaultPrompt": [
       "Check my current ChatGPT and Codex usage.",
       "Show my remaining limits and reset times."
