@@ -19,12 +19,9 @@ In Codex CLI only, `/status` remains the separate native way for the user to ins
 
 Do not use `platform.openai.com/usage` unless the user specifically asks about metered OpenAI API usage or spend. API billing is separate from ChatGPT Work and Codex subscription usage.
 
-## Authentication and privacy
+## Capability and privacy
 
-- Confirm the browser is on an HTTPS `chatgpt.com` origin before reading account information.
-- If sign-in is required, do not start an interactive sign-in. Fail fast with the official dashboard link instead. Never ask the user to paste a password, session cookie, access token, API key, recovery code, or two-factor code into chat.
-- Do not inspect unrelated account pages, conversations, or personal data.
-- Do not change plans, buy credits, alter billing, or modify account settings.
+If the host cannot return verified signed-in usage data, stop immediately. Say: `This chat does not provide account usage to Usage Checker.` Never request credentials or attempt authentication. Do not inspect unrelated personal data or modify account settings.
 
 ## Report
 
