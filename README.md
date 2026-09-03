@@ -1,71 +1,54 @@
 # ChatGPT Usage Plugin
 
-A privacy-conscious, read-only plugin that reports current ChatGPT Work and Codex subscription usage through the fastest verified source available to the host.
+Usage Checker is a privacy-conscious, read-only plugin for checking ChatGPT Work and Codex subscription usage from ChatGPT mobile through a connected desktop host.
 
-## Use it
+## How it works
 
-- ChatGPT on mobile, web, or desktop: invoke `@usage`.
-- Codex: invoke `$usage`.
-- Codex CLI already has a built-in `/status` command; this skill uses it as a fallback when the dashboard is unavailable.
+ChatGPT Remote runs the request on your own Mac or Windows ChatGPT desktop/Codex host. Usage Checker makes one native account-usage read on that host and returns verified limits, credits, and reset times directly in the phone conversation.
 
-The plugin now loads its Usage skill as soon as Usage Checker is selected. It uses host-provided usage data first, avoids opening a browser when a direct usage tool is available, and limits the dashboard fallback to one immediate attempt. The report preserves whether the source labels a number as **used**, **remaining**, or **left**, and includes visible reset times and credit balances. It never asks for passwords, cookies, access tokens, API keys, or two-factor codes.
+Usage Checker has no backend service and does not receive your ChatGPT credentials or usage history.
 
-## Data source
+## One-time setup
 
-The primary source is account-usage data supplied directly by the host. If that is unavailable, the plugin can make one immediate attempt to read the signed-in account page at:
+1. Install **Usage Checker** from the public ChatGPT Plugins Directory.
+2. Install or update the ChatGPT desktop app on a Mac or Windows PC.
+3. Sign in on the computer and phone with the same ChatGPT account and workspace.
+4. On the computer, open **Settings > Connections > Control this Mac or PC** and enable Remote.
+5. Scan the displayed QR code with the phone and finish the ChatGPT pairing flow.
+6. Keep the desktop app running, online, and awake when you want to check usage remotely.
 
-https://chatgpt.com/codex/settings/usage
+Remote availability can depend on OpenAI rollout and workspace administrator policy.
 
-This is distinct from `platform.openai.com/usage`, which reports metered OpenAI API activity and spend.
+## Check usage from a phone
 
-## Install on a PC
+1. Open **Remote** in the ChatGPT mobile app.
+2. Open or start a conversation on the connected desktop host.
+3. Enter `@Usage Checker` or select Usage Checker and enter `usage`.
 
-The quickest supported route is Codex CLI:
+The result appears inline. Usage Checker does not open a browser, search the web, retry, or take you away from ChatGPT.
+
+## Unsupported conversations
+
+Ordinary cloud-only ChatGPT conversations do not currently expose the required native usage capability. In that environment Usage Checker immediately says:
+
+> Usage Checker needs a ChatGPT Remote conversation connected to a running desktop Codex host.
+
+## Install from GitHub for development
 
 ```bash
 codex plugin marketplace add kyleisbased/chatgpt-usage-plugin
 codex plugin add usage-checker@kyleisbased
 ```
 
-Start a new Codex session, then enter `$usage`.
+Start a new Codex session and invoke `$usage`. GitHub installation is for development; phone access uses ChatGPT Remote to the configured host.
 
-You can also install it from the plugin browser:
+## Data and security
 
-1. Start Codex and enter `/plugins`.
-2. Open the `Kyle is Based` marketplace.
-3. Install **Usage Checker**.
-4. Start a new session.
-
-To test the repository marketplace in the ChatGPT desktop app, clone this repository, open its root as your project, restart the app, then install **Usage Checker** from the Plugins directory.
-
-## Use it on a phone
-
-GitHub marketplaces cannot be added directly from the ChatGPT mobile app. Native phone use becomes available when either:
-
-- the plugin is approved in OpenAI's universal Plugins Directory; or
-- a ChatGPT workspace administrator imports this GitHub marketplace and gives your role access.
-
-Once the plugin appears for your account, install it from the mobile Plugins directory, start a new chat, and invoke `@usage`.
-
-Version 0.2.0 removes the first-invocation gap and prevents repeated dashboard loading. A successful check is normally limited by the host's direct usage lookup. When that capability is unavailable, the plugin gives the dashboard fallback a five-second maximum and then returns the official link instead of waiting or retrying for minutes.
-
-Until the public listing is approved, you can still use the PC installation from a phone through your own remote-terminal setup and enter `$usage` in Codex CLI.
-
-## Publish and distribute
-
-This repository contains a GitHub marketplace manifest at `.agents/plugins/marketplace.json` and the plugin package at `plugins/usage-checker`.
-
-Workspace administrators can import and sync this repository URL as a GitHub marketplace for their team. To make the plugin discoverable to everyone in ChatGPT's public Plugins Directory, submit it through OpenAI's plugin submission process. The prepared listing information and review tests are in `SUBMISSION.md`.
-
-## Requirements
-
-- ChatGPT or Codex with plugin support.
-- An eligible authenticated browser capability when account usage is not already exposed by the host.
-- Access to the signed-in account's usage dashboard.
-
-## Security
-
-The plugin includes no server, analytics, credential collection, or third-party data transfer. It only supplies workflow instructions to the host.
+- One read-only host-native usage call per successful request.
+- No Usage Checker accounts, backend, analytics, cookies, or credential storage.
+- No passwords, session cookies, access tokens, API keys, recovery codes, or multifactor codes are requested.
+- No plan changes, credit purchases, or usage-reset actions.
+- OpenAI API billing and token analytics are separate and out of scope.
 
 See [Privacy](PRIVACY.md), [Terms](TERMS.md), and [Support](SUPPORT.md).
 

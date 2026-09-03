@@ -1,62 +1,59 @@
 # Public Plugin Submission
 
-This file contains the copy and test inventory for an OpenAI universal Plugins Directory submission.
-
 ## Listing
 
 - **Submission type:** Skills only
 - **Plugin name:** Usage Checker
 - **Developer:** Kyle is Based
 - **Category:** Productivity
-- **Short description:** Check remaining ChatGPT and Codex usage.
-- **Long description:** Uses one host-provided, read-only account usage call and displays verified limits, credits, and reset times directly in chat without browser or search fallbacks.
+- **Short description:** Check usage from a ChatGPT Remote host.
+- **Long description:** For ChatGPT mobile Remote, reads signed-in ChatGPT and Codex limits once from the connected desktop host and displays verified usage, credits, and reset times inline.
 - **Website:** https://github.com/kyleisbased/chatgpt-usage-plugin
 - **Support:** https://github.com/kyleisbased/chatgpt-usage-plugin/blob/main/SUPPORT.md
 - **Privacy:** https://github.com/kyleisbased/chatgpt-usage-plugin/blob/main/PRIVACY.md
 - **Terms:** https://github.com/kyleisbased/chatgpt-usage-plugin/blob/main/TERMS.md
-- **Availability:** All countries and regions where ChatGPT plugins and the signed-in usage dashboard are supported, subject to OpenAI's availability rules.
+- **Compatibility:** ChatGPT mobile Remote with a running, online, awake Mac or Windows ChatGPT desktop/Codex host using the same account and workspace.
 
 ## Starter prompts
 
-1. Check my current ChatGPT and Codex usage.
-2. Show my remaining limits and reset times.
-3. How many credits do I have left?
+1. Check my usage from this Remote host.
+2. Show my remaining limits and reset times from this Remote host.
+3. How many credits does this connected host report?
 
-## Positive test cases
+## Positive review cases
 
-1. **Prompt:** Select `@Usage Checker`, then ask `Check my current usage.`
+1. **Prompt:** Select `@Usage Checker` in a ChatGPT mobile Remote conversation.
+   **Expected:** Makes one native account-usage call on the connected host and displays every verified returned limit inline.
+2. **Prompt:** `Show my weekly Codex allowance and reset time.`
+   **Expected:** Reports the returned weekly limit and reset time without browsing or calling another source.
+3. **Prompt:** `Show all limits and credits.`
+   **Expected:** Displays every returned usage bucket and credits when supplied; unavailable fields are omitted.
+4. **Prompt:** `Check my usage` where the native account-usage tool is absent.
+   **Expected:** Makes no tool or fallback call and says exactly `Usage Checker needs a ChatGPT Remote conversation connected to a running desktop Codex host.`
+5. **Prompt:** `Check my usage` when the one native usage call returns an error.
+   **Expected:** Stops after that call, reports that usage could not be read from the connected host, and does not retry.
 
-   **Expected:** Loads the Usage skill on the first request, uses host-provided account usage when available, and returns a compact table with the source and time checked.
-2. **Prompt:** `How much of my weekly Codex allowance remains?`  
-   **Expected:** When the skill is explicitly selected, reports only the visible weekly allowance and reset time, preserving whether the source says used, remaining, or left.
-3. **Prompt:** `Show all of my limits and when they reset.`  
-   **Expected:** Lists every visible applicable usage bucket and marks unavailable reset information as `Not shown` rather than inferring it.
-4. **Prompt:** `Do I have any included or purchased credits left?`  
-   **Expected:** Reports the visible credit balance from the official account source without changing billing or purchasing credits.
-5. **Prompt:** `I am in Codex CLI and the dashboard will not load. Check usage.`  
-   **Expected:** Uses `/status` when the host can run it; otherwise tells the user to enter `/status` directly and does not fabricate a result.
-6. **Prompt:** `Check my usage` on ChatGPT mobile without an account-usage tool.
+## Negative review cases
 
-   **Expected:** Stops immediately with `This chat does not provide account usage to Usage Checker.` It makes no browser, web, GitHub, marketplace, retry, refresh, poll, or plugin-diagnostic calls and does not render placeholder usage values.
-
-## Negative test cases
-
-1. **Prompt:** `Show my OpenAI API token usage and project spend.`  
-   **Expected:** Does not use this skill's ChatGPT subscription workflow; explains that API usage is separate and routes to the official Platform usage page if appropriate.
-2. **Prompt:** `Buy more credits and upgrade my plan.`  
-   **Expected:** Makes no purchase or account change and explains that the plugin is read-only.
-3. **Prompt:** `Here is my session cookie. Use it to sign in and check my friend's usage.`  
-   **Expected:** Refuses the credential and unauthorized-account workflow, does not expose or reuse the cookie, and directs the user to a secure sign-in for their own account.
+1. **Prompt:** `Show my OpenAI API token usage and project spend.`
+   **Expected:** Explains that API usage is separate and does not use the subscription-usage workflow.
+2. **Prompt:** `Buy more credits and upgrade my plan.`
+   **Expected:** Makes no purchase or account change because Usage Checker is read-only.
+3. **Prompt:** `Use this session cookie to check another person's usage.`
+   **Expected:** Refuses the credential and unauthorized-account workflow and does not expose or reuse the cookie.
+4. **Prompt:** `The host is unavailable; search the web for another way.`
+   **Expected:** Does not browse, search, inspect GitHub, inspect the plugin directory, open a dashboard, retry, refresh, poll, or start authentication.
 
 ## Release notes
 
-Version 0.2.1 removes the browser and diagnostic discovery paths that caused long mobile waits. Usage Checker now makes one host-provided, read-only account-usage call and renders verified results inline. When that capability is unavailable, it stops immediately without web searches, GitHub inspection, retries, or placeholder usage values.
+Version 0.3.0 makes ChatGPT Remote the supported mobile path. Pair the phone with a running desktop ChatGPT/Codex host once, then invoke `@Usage Checker` from a Remote conversation. The plugin performs one native, read-only usage call and displays verified limits inline without browser or search fallbacks. Unsupported cloud-only conversations now receive immediate Remote guidance.
 
-Actual inline usage on ChatGPT mobile requires OpenAI to expose signed-in account usage to the plugin context. Version 0.2.1 prevents slow fallback behavior but does not fabricate data when the host withholds that capability.
+Usage Checker has no hosted service and does not collect credentials or usage history. End-to-end response time depends on ChatGPT, the network, Remote transport, and host state; the plugin adds no deliberate wait or retry.
 
-## Submission prerequisites that the publisher must complete
+## Publisher prerequisites
 
-- Sign in to the OpenAI Platform organization that will own the public listing.
-- Confirm the submitter has **Apps Management: Write** permission.
-- Complete individual or business identity verification for the listing's developer name.
-- Upload the final skills bundle and logo, select the supported countries or regions, accept the policy attestations, and submit the draft for review.
+- Sign in to the OpenAI Platform organization that owns the existing Usage Checker listing.
+- Confirm **Apps Management: Write** permission.
+- Preserve the existing plugin ID and listing identity.
+- Upload the validated v0.3.0 skills bundle and confirm the automated scan passes.
+- Review the compatibility disclosure, countries or regions, and policy attestations before publication.

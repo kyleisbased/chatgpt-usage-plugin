@@ -1,7 +1,7 @@
 {
   "name": "usage-checker",
-  "version": "0.2.1",
-  "description": "Check signed-in ChatGPT and Codex usage with one native read-only call.",
+  "version": "0.3.0",
+  "description": "Check ChatGPT and Codex usage from a connected Remote desktop host.",
   "author": {
     "name": "Kyle is Based",
     "url": "https://github.com/kyleisbased"
@@ -13,8 +13,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Usage Checker",
-    "shortDescription": "Check remaining ChatGPT and Codex usage.",
-    "longDescription": "Uses one host-provided, read-only account usage call and displays verified limits, credits, and reset times directly in chat without browser or search fallbacks.",
+    "shortDescription": "Check usage from a ChatGPT Remote host.",
+    "longDescription": "For ChatGPT mobile Remote, reads signed-in ChatGPT and Codex limits once from the connected desktop host and displays verified usage, credits, and reset times inline.",
     "developerName": "Kyle is Based",
     "category": "Productivity",
     "capabilities": ["Read"],
@@ -25,8 +25,8 @@
     "composerIcon": "./assets/icon.png",
     "logo": "./assets/logo.png",
     "defaultPrompt": [
-      "Check my current ChatGPT and Codex usage.",
-      "Show my remaining limits and reset times."
+      "Check my usage from this Remote host.",
+      "Show my remaining limits and reset times from this Remote host."
     ]
   }
 }
