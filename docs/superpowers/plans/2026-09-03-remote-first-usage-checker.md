@@ -188,6 +188,12 @@ description: Use when the signed-in user asks for current ChatGPT Work or Codex 
 
 Report current ChatGPT Work and Codex subscription usage from the signed-in user's connected host. This is a read-only, latency-sensitive workflow.
 
+## Invocation
+
+- In a Remote Codex conversation, enter `$usage`.
+- In a Remote ChatGPT or ChatGPT Work conversation, select `@Usage Checker`.
+- Natural-language requests can invoke this skill implicitly, such as `check my usage`.
+
 ## Remote-first execution
 
 This workflow has one data path. If this ChatGPT Remote conversation exposes a dedicated signed-in account-usage or usage-limits tool, call it exactly once and answer from that result.
@@ -231,10 +237,10 @@ policy:
 Run:
 
 ```powershell
-python -m unittest tests.test_plugin_contract.UsageCheckerContractTests.test_selecting_plugin_makes_usage_skill_available tests.test_plugin_contract.UsageCheckerContractTests.test_mobile_path_forbids_diagnostic_fallbacks tests.test_plugin_contract.UsageCheckerContractTests.test_remote_first_skill_contract -v
+python -m unittest tests.test_plugin_contract.UsageCheckerContractTests.test_selecting_plugin_makes_usage_skill_available tests.test_plugin_contract.UsageCheckerContractTests.test_mobile_path_forbids_diagnostic_fallbacks tests.test_plugin_contract.UsageCheckerContractTests.test_remote_first_skill_contract tests.test_plugin_contract.UsageCheckerContractTests.test_remote_codex_default_prompt_uses_canonical_dollar_command tests.test_plugin_contract.UsageCheckerContractTests.test_skill_distinguishes_invocation_by_remote_surface -v
 ```
 
-Expected: all three tests pass.
+Expected: all five tests pass.
 
 - [ ] **Step 4: Run the full suite and verify only release/docs remain RED**
 
@@ -244,7 +250,7 @@ Run:
 python -m unittest discover -s tests -v
 ```
 
-Expected: only `test_remote_first_release_is_0_3_0` and `test_public_docs_describe_remote_without_dashboard_fallback` fail.
+Expected: only the release and public-document tests, including the surface-specific README and submission checks, fail until Task 3.
 
 - [ ] **Step 5: Commit the Remote workflow**
 
