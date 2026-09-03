@@ -7,18 +7,15 @@ description: Use when the signed-in user asks for current ChatGPT Work or Codex 
 
 Report current ChatGPT Work and Codex subscription usage from the signed-in user's official account. This is a read-only, latency-sensitive workflow.
 
-## Fast source selection
+## Mobile-first execution
 
-1. Use host-provided account-usage data immediately. If the host exposes a dedicated account usage or usage-limits tool, call it once and answer from its result. Do not open a browser when this source is available.
-2. In an active Codex CLI session without that tool, use `/status` if the host can run it programmatically. Otherwise, tell the user to enter `/status` directly.
-3. Only when neither direct source is available, make at most one direct browser attempt to open `https://chatgpt.com/codex/settings/usage` in an authenticated browser and inspect the visible dashboard. Open the exact URL; do not search for it.
+This workflow has one data path. If the host exposes a dedicated signed-in account-usage or usage-limits tool, call it exactly once and answer from that result.
 
-## Time budget and fallback
+Do not browse. Do not search the web. Do not inspect GitHub. Do not search for the plugin. Do not open an account dashboard. Do not retry, refresh, poll, or wait. Do not start interactive sign-in. Do not attempt to discover, install, reload, repair, or diagnose plugin capabilities.
 
-- Do not retry, refresh, poll, or wait for the dashboard.
-- Limit the browser fallback to 5 seconds. If the host cannot enforce that limit or the page is not already ready, skip the browser attempt and fail fast.
-- If the browser is unavailable, requires sign-in, does not show usage immediately, or returns an unverified result, fail fast. Give the user the official dashboard link and briefly state that this host did not expose verifiable usage data.
-- Do not tell the user to refresh ChatGPT, reselect the plugin, or reinstall it when this skill is already loaded.
+If no signed-in account-usage tool is available, stop immediately. Say: `This chat does not provide account usage to Usage Checker.` Do not render an empty or `Not shown` table and do not claim that zero usage was found.
+
+In Codex CLI only, `/status` remains the separate native way for the user to inspect limits. Do not route ChatGPT mobile users to CLI instructions.
 
 Do not use `platform.openai.com/usage` unless the user specifically asks about metered OpenAI API usage or spend. API billing is separate from ChatGPT Work and Codex subscription usage.
 
@@ -41,4 +38,4 @@ Read only values visibly shown by the source. Preserve the dashboard's exact dis
 
 Return a compact table with `Allowance`, `Amount`, and `Resets` columns. Add the source and the time checked. Use the timezone displayed by the dashboard; if none is shown, state that the timezone was not provided.
 
-Never calculate or infer a missing percentage, balance, reset time, or plan. Mark unavailable fields as `Not shown`. If the page is inaccessible or the result cannot be verified, say so and give the official dashboard link for the user to open.
+Only render the table after a verified account-usage tool returns data. Preserve the source's exact distinction between **used**, **remaining**, and **left**. Do not calculate or infer missing values. Include the source and check time.
