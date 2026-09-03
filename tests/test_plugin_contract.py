@@ -9,6 +9,15 @@ PLUGIN = ROOT / "plugins" / "usage-checker"
 SKILL = PLUGIN / "skills" / "usage" / "SKILL.md"
 OPENAI_YAML = PLUGIN / "skills" / "usage" / "agents" / "openai.yaml"
 MANIFEST = PLUGIN / ".codex-plugin" / "plugin.json"
+README = ROOT / "README.md"
+PRIVACY = ROOT / "PRIVACY.md"
+SUPPORT = ROOT / "SUPPORT.md"
+TERMS = ROOT / "TERMS.md"
+SUBMISSION = ROOT / "SUBMISSION.md"
+REMOTE_GUIDANCE = (
+    "Usage Checker needs a ChatGPT Remote conversation connected to a "
+    "running desktop Codex host."
+)
 
 
 class UsageCheckerContractTests(unittest.TestCase):
@@ -42,16 +51,59 @@ class UsageCheckerContractTests(unittest.TestCase):
 
         self.assertNotIn("browser attempt", instructions)
 
-    def test_missing_source_stops_without_placeholder_usage(self):
-        instructions = SKILL.read_text(encoding="utf-8").lower()
+    def test_remote_first_skill_contract(self):
+        instructions = SKILL.read_text(encoding="utf-8")
+        lowered = instructions.lower()
 
-        self.assertIn("stop immediately", instructions)
-        self.assertIn("do not render an empty or `not shown` table", instructions)
-        self.assertIn("this chat does not provide account usage", instructions)
+        for phrase in [
+            "chatgpt remote conversation",
+            "call it exactly once",
+            "do not browse",
+            "do not search the web",
+            "do not inspect github",
+            "do not search for the plugin",
+            "do not retry, refresh, poll, or wait",
+            "do not use shell or computer-use tools",
+            "do not render an empty or `not shown` table",
+            "do not make a second call",
+            "omit unavailable cells or columns",
+            "100 - usedpercent",
+        ]:
+            self.assertIn(phrase, lowered)
 
-    def test_mobile_reliability_release_is_0_2_1(self):
+        self.assertIn(REMOTE_GUIDANCE, instructions)
+        self.assertNotIn(
+            "This chat does not provide account usage to Usage Checker.",
+            instructions,
+        )
+
+    def test_remote_first_release_is_0_3_0(self):
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-        self.assertEqual("0.2.1", manifest["version"])
+        combined = " ".join(
+            [
+                manifest["description"],
+                manifest["interface"]["shortDescription"],
+                manifest["interface"]["longDescription"],
+                *manifest["interface"]["defaultPrompt"],
+            ]
+        ).lower()
+
+        self.assertEqual("0.3.0", manifest["version"])
+        self.assertIn("remote", combined)
+        self.assertIn("desktop", combined)
+
+    def test_public_docs_describe_remote_without_dashboard_fallback(self):
+        for path in [README, PRIVACY, SUPPORT, TERMS, SUBMISSION]:
+            content = path.read_text(encoding="utf-8")
+            lowered = content.lower()
+            self.assertIn("remote", lowered, f"{path.name} must explain Remote")
+            self.assertNotIn("chatgpt.com/codex/settings/usage", lowered)
+            self.assertNotIn("dashboard fallback", lowered)
+
+        readme = README.read_text(encoding="utf-8")
+        submission = SUBMISSION.read_text(encoding="utf-8")
+        self.assertIn("@Usage Checker", readme)
+        self.assertIn(REMOTE_GUIDANCE, submission)
 
     def test_plugin_manifest_points_to_an_existing_skill_directory(self):
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
