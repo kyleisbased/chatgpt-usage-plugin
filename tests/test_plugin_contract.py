@@ -57,6 +57,7 @@ class UsageCheckerContractTests(unittest.TestCase):
 
         for phrase in [
             "chatgpt remote conversation",
+            "host-native, read-only account-usage call",
             "call it exactly once",
             "do not browse",
             "do not search the web",
@@ -65,9 +66,13 @@ class UsageCheckerContractTests(unittest.TestCase):
             "do not retry, refresh, poll, or wait",
             "do not use shell or computer-use tools",
             "do not render an empty or `not shown` table",
+            "do not call any tool on this path.",
             "do not make a second call",
             "omit unavailable cells or columns",
-            "100 - usedpercent",
+            "remainingpercent = 100 - usedpercent",
+            "the only permitted calculated value",
+            "label it `calculated`",
+            "do not calculate or infer any other missing value",
         ]:
             self.assertIn(phrase, lowered)
 
@@ -91,19 +96,40 @@ class UsageCheckerContractTests(unittest.TestCase):
         self.assertEqual("0.3.0", manifest["version"])
         self.assertIn("remote", combined)
         self.assertIn("desktop", combined)
+        self.assertNotIn("mcpServers", manifest)
+        self.assertNotIn("apps", manifest)
 
     def test_public_docs_describe_remote_without_dashboard_fallback(self):
-        for path in [README, PRIVACY, SUPPORT, TERMS, SUBMISSION]:
-            content = path.read_text(encoding="utf-8")
-            lowered = content.lower()
-            self.assertIn("remote", lowered, f"{path.name} must explain Remote")
+        required_phrases = {
+            README: [
+                "chatgpt remote runs the request on your own",
+                "same chatgpt account and workspace",
+                "running, online, and awake",
+                "@usage checker",
+            ],
+            PRIVACY: [
+                "chatgpt remote runs usage checker on the user's connected",
+                "one native, read-only account-usage call",
+            ],
+            SUPPORT: [
+                "ordinary cloud-only chatgpt conversations do not currently expose",
+            ],
+            TERMS: [
+                "returned by the user's connected chatgpt desktop/codex host through chatgpt remote",
+            ],
+            SUBMISSION: [
+                "compatibility:",
+                "chatgpt mobile remote with a running, online, awake mac or windows chatgpt desktop/codex host using the same account and workspace.",
+                REMOTE_GUIDANCE.lower(),
+            ],
+        }
+
+        for path, phrases in required_phrases.items():
+            lowered = path.read_text(encoding="utf-8").lower()
+            for phrase in phrases:
+                self.assertIn(phrase, lowered, f"{path.name} must contain {phrase!r}")
             self.assertNotIn("chatgpt.com/codex/settings/usage", lowered)
             self.assertNotIn("dashboard fallback", lowered)
-
-        readme = README.read_text(encoding="utf-8")
-        submission = SUBMISSION.read_text(encoding="utf-8")
-        self.assertIn("@Usage Checker", readme)
-        self.assertIn(REMOTE_GUIDANCE, submission)
 
     def test_plugin_manifest_points_to_an_existing_skill_directory(self):
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
