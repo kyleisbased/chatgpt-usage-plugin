@@ -10,7 +10,7 @@ Report current ChatGPT Work and Codex subscription usage from the signed-in user
 ## Invocation
 
 - In a Remote Codex conversation, enter `$usage`.
-- In a Remote ChatGPT or ChatGPT Work conversation, select `@Usage`.
+- In a ChatGPT or ChatGPT Work conversation, select `@Usage`, whether or not the conversation is Remote.
 - Natural-language requests can invoke this skill implicitly, such as `check my usage`.
 
 ## Remote-first execution
@@ -21,9 +21,9 @@ In a confirmed ChatGPT Remote conversation, if a dedicated signed-in account-usa
 
 Do not browse. Do not search the web. Do not inspect GitHub. Do not search for the plugin. Do not open an account dashboard. Do not retry, refresh, poll, or wait. Do not start interactive sign-in. Do not attempt to discover, install, reload, repair, or diagnose plugin capabilities. Do not use shell or computer-use tools.
 
-If the conversation is Remote or its Remote status is unknown and no signed-in account-usage tool is available, stop immediately. Say exactly: `Usage Checker needs a ChatGPT Remote conversation connected to a running desktop Codex host.` Do not call any tool on this path. Do not render an empty or `Not shown` table and do not claim that zero usage was found. Do not show the dashboard link.
+If the conversation is Remote or its Remote status is unknown and no signed-in account-usage tool is available, stop immediately. Say exactly: `Usage needs a ChatGPT Remote conversation connected to a running desktop Codex host.` Do not call any tool on this path. Do not render an empty or `Not shown` table and do not claim that zero usage was found. Do not show the dashboard link.
 
-If the single native call fails, stop. Say: `Usage Checker could not read usage from the connected host.` Include a short host-provided error only when it is safe and useful. Do not make a second call or try another source. Do not show the dashboard link.
+If the single native call fails, stop. Say: `Usage could not read usage from the connected host.` Include a short host-provided error only when it is safe and useful. Do not make a second call or try another source. Do not show the dashboard link.
 
 Do not use `platform.openai.com/usage` unless the user specifically asks about metered OpenAI API usage or spend. API billing is separate from ChatGPT Work and Codex subscription usage.
 

@@ -9,7 +9,7 @@ Before opening an issue, include:
 - the phone platform and ChatGPT app version;
 - the desktop host platform and ChatGPT desktop app version;
 - whether the conversation was opened from ChatGPT **Remote**;
-- the Usage Checker plugin version;
+- the Usage plugin version;
 - whether the host was running, online, and awake;
 - the exact error text with credentials and private account details removed.
 

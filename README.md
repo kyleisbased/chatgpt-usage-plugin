@@ -21,12 +21,13 @@ Remote availability can depend on OpenAI rollout and workspace administrator pol
 
 ## Check usage from a phone
 
-1. Open **Remote** in the ChatGPT mobile app.
-2. Open or start a conversation on the connected desktop host.
-3. Use the invocation for that conversation:
-   - In a Remote Codex conversation, enter `$usage`.
-   - In a Remote ChatGPT or ChatGPT Work conversation, select `@Usage`.
-   - You can also ask naturally, for example `check my usage`.
+Use the invocation for your conversation:
+
+- In a ChatGPT or ChatGPT Work conversation, select `@Usage`, whether or not the conversation is Remote.
+- In a Remote Codex conversation, enter `$usage`.
+- You can also ask naturally, for example `check my usage`.
+
+For a live inline result, open **Remote** in the ChatGPT mobile app and start a conversation on the connected desktop host before invoking Usage.
 
 The result appears inline. Usage does not open a browser, search the web, retry, or take you away from ChatGPT.
 

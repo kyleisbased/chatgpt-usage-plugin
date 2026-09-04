@@ -2,7 +2,7 @@
 
 Effective: September 3, 2026
 
-Usage Checker is an open-source, read-only workflow provided under the MIT License. By using it, you agree to use it only with accounts and information you are authorized to access.
+Usage is an open-source, read-only workflow provided under the MIT License. By using it, you agree to use it only with accounts and information you are authorized to access.
 
 The plugin reports information returned by the user's connected ChatGPT desktop/Codex host through ChatGPT Remote. Results may be delayed, incomplete, or unavailable when Remote is unavailable, the host is offline or asleep, or the host does not expose account usage. Results are not a billing invoice, contractual entitlement, or guarantee of service availability.
 

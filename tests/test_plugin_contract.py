@@ -15,7 +15,7 @@ SUPPORT = ROOT / "SUPPORT.md"
 TERMS = ROOT / "TERMS.md"
 SUBMISSION = ROOT / "SUBMISSION.md"
 REMOTE_GUIDANCE = (
-    "Usage Checker needs a ChatGPT Remote conversation connected to a "
+    "Usage needs a ChatGPT Remote conversation connected to a "
     "running desktop Codex host."
 )
 DASHBOARD_URL = "https://chatgpt.com/codex/settings/usage"
@@ -57,7 +57,8 @@ class UsageCheckerContractTests(unittest.TestCase):
 
         for phrase in [
             "in a remote codex conversation, enter `$usage`",
-            "in a remote chatgpt or chatgpt work conversation, select `@usage`",
+            "in a chatgpt or chatgpt work conversation, select `@usage`",
+            "whether or not the conversation is remote",
             "natural-language requests can invoke this skill implicitly",
         ]:
             self.assertIn(phrase, instructions)
@@ -66,12 +67,14 @@ class UsageCheckerContractTests(unittest.TestCase):
         required_phrases = {
             README: [
                 "in a remote codex conversation, enter `$usage`",
-                "in a remote chatgpt or chatgpt work conversation, select `@usage`",
+                "in a chatgpt or chatgpt work conversation, select `@usage`",
+                "whether or not the conversation is remote",
                 "you can also ask naturally, for example `check my usage`",
             ],
             SUBMISSION: [
                 "`$usage` in a remote codex conversation",
-                "`@usage` in a remote chatgpt or chatgpt work conversation",
+                "`@usage` in a chatgpt or chatgpt work conversation",
+                "whether or not the conversation is remote",
                 "natural-language requests such as `check my usage` can invoke the skill implicitly",
             ],
         }
@@ -106,6 +109,15 @@ class UsageCheckerContractTests(unittest.TestCase):
             content = path.read_text(encoding="utf-8").lower()
             self.assertNotIn("@usage checker", content)
             self.assertNotIn("$usage-checker:usage", content)
+
+    def test_public_product_name_is_usage(self):
+        for path in [README, PRIVACY, SUPPORT, TERMS, SUBMISSION, SKILL]:
+            content = path.read_text(encoding="utf-8")
+            self.assertNotIn(
+                "Usage Checker",
+                content,
+                f"{path.name} must use the public product name Usage",
+            )
 
     def test_mobile_path_forbids_diagnostic_fallbacks(self):
         instructions = SKILL.read_text(encoding="utf-8").lower()
@@ -203,7 +215,7 @@ class UsageCheckerContractTests(unittest.TestCase):
                 DASHBOARD_URL,
             ],
             PRIVACY: [
-                "chatgpt remote runs usage checker on the user's connected",
+                "chatgpt remote runs usage on the user's connected",
                 "one native, read-only account-usage call",
             ],
             SUPPORT: [
