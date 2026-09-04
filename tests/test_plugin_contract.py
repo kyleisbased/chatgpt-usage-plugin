@@ -166,7 +166,7 @@ class UsageCheckerContractTests(unittest.TestCase):
             instructions,
         )
 
-    def test_release_is_0_3_1_with_short_public_name(self):
+    def test_release_is_0_3_2_with_short_public_name(self):
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
         combined = " ".join(
             [
@@ -178,14 +178,14 @@ class UsageCheckerContractTests(unittest.TestCase):
         ).lower()
 
         self.assertEqual("usage-checker", manifest["name"])
-        self.assertEqual("0.3.1", manifest["version"])
+        self.assertEqual("0.3.2", manifest["version"])
         self.assertEqual("Usage", manifest["interface"]["displayName"])
         self.assertIn("remote", combined)
         self.assertIn("desktop", combined)
         self.assertNotIn("mcpServers", manifest)
         self.assertNotIn("apps", manifest)
 
-    def test_non_remote_path_links_dashboard_without_tools(self):
+    def test_chat_without_explicit_remote_context_links_dashboard_without_tools(self):
         instructions = SKILL.read_text(encoding="utf-8")
         lowered = instructions.lower()
 
@@ -198,12 +198,23 @@ class UsageCheckerContractTests(unittest.TestCase):
             f"[Open your ChatGPT/Codex usage dashboard]({DASHBOARD_URL})",
             non_remote,
         )
-        self.assertIn("confirmed not to be remote", non_remote.lower())
+        self.assertIn(
+            "does not explicitly identify it as remote",
+            non_remote.lower(),
+        )
         self.assertIn("do not call any tool", non_remote.lower())
-        self.assertIn("if remote status is unknown", non_remote.lower())
-        self.assertIn("do not show the dashboard link", non_remote.lower())
+        self.assertNotIn("remote status is unknown", instructions.lower())
         self.assertNotIn(DASHBOARD_URL, remote_path)
         self.assertIn("do not show the dashboard link", lowered)
+
+    def test_explicit_remote_context_never_uses_dashboard_fallback(self):
+        instructions = SKILL.read_text(encoding="utf-8").lower()
+        remote_path = instructions.split("## non-remote fallback", 1)[0]
+
+        self.assertIn("explicitly identifies this conversation as remote", remote_path)
+        self.assertIn("no signed-in account-usage tool is available", remote_path)
+        self.assertIn("do not show the dashboard link", remote_path)
+        self.assertNotIn(DASHBOARD_URL, remote_path)
 
     def test_public_docs_describe_remote_and_non_remote_paths(self):
         required_phrases = {
@@ -212,7 +223,7 @@ class UsageCheckerContractTests(unittest.TestCase):
                 "same chatgpt account and workspace",
                 "running, online, and awake",
                 "@usage",
-                "confirmed not to be remote",
+                "does not explicitly identify itself as remote",
                 DASHBOARD_URL,
             ],
             PRIVACY: [
@@ -229,7 +240,7 @@ class UsageCheckerContractTests(unittest.TestCase):
                 "compatibility:",
                 "chatgpt mobile remote with a running, online, awake mac or windows chatgpt desktop/codex host using the same account and workspace.",
                 REMOTE_GUIDANCE.lower(),
-                "confirmed not to be remote",
+                "does not explicitly identify itself as remote",
                 DASHBOARD_URL,
             ],
         }

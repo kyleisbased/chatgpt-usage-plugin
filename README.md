@@ -33,11 +33,11 @@ The result appears inline. Usage does not open a browser, search the web, retry,
 
 ## When the chat is not Remote
 
-Ordinary cloud-only ChatGPT conversations do not currently expose the required native usage capability. Only when the conversation is confirmed not to be Remote, Usage makes no tool call and immediately returns this clickable link in chat:
+Ordinary cloud-only ChatGPT conversations do not currently expose the required native usage capability. When the conversation does not explicitly identify itself as Remote and no native usage tool is available, Usage makes no tool call and immediately returns this clickable link in chat:
 
 > [Open your ChatGPT/Codex usage dashboard](https://chatgpt.com/codex/settings/usage).
 
-If the conversation is Remote but the host capability is unavailable, or if Remote status is unknown, Usage instead returns immediate Remote guidance and does not show the dashboard link.
+If the conversation explicitly identifies itself as Remote but the host capability is unavailable, Usage instead returns immediate Remote guidance and does not show the dashboard link.
 
 ## Install from GitHub for development
 

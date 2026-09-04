@@ -32,11 +32,11 @@ Use `$usage` in a Remote Codex conversation. Use `@Usage` in a ChatGPT or ChatGP
    **Expected:** Reports the returned weekly limit and reset time without browsing or calling another source.
 4. **Prompt:** `Show all limits and credits.`
    **Expected:** Displays every returned usage bucket and credits when supplied; unavailable fields are omitted.
-5. **Prompt:** `Check my usage` in a conversation confirmed not to be Remote.
+5. **Prompt:** `Check my usage` in a conversation that does not explicitly identify itself as Remote and has no native usage tool.
    **Expected:** Makes no tool call and returns [Open your ChatGPT/Codex usage dashboard](https://chatgpt.com/codex/settings/usage) as a clickable link in chat.
 6. **Prompt:** `Check my usage` when the one native usage call returns an error.
    **Expected:** Stops after that call, reports that usage could not be read from the connected host, and does not retry.
-7. **Prompt:** `Check my usage` in a Remote conversation where the native account-usage tool is absent, or when Remote status is unknown.
+7. **Prompt:** `Check my usage` in an explicitly identified Remote conversation where the native account-usage tool is absent.
    **Expected:** Makes no tool call, does not show the dashboard link, and says exactly `Usage needs a ChatGPT Remote conversation connected to a running desktop Codex host.`
 
 ## Negative review cases
@@ -52,7 +52,7 @@ Use `$usage` in a Remote Codex conversation. Use `@Usage` in a ChatGPT or ChatGP
 
 ## Release notes
 
-Version 0.3.1 shortens the public plugin name and mobile invocation to Usage and `@Usage`; Remote Codex continues to use `$usage`. A conversation confirmed not to be Remote now receives a clickable ChatGPT/Codex usage dashboard link without any tool call. Remote success still performs exactly one native read, while Remote failure and unknown Remote status never show the dashboard link.
+Version 0.3.2 fixes non-Remote mobile routing. A ChatGPT conversation that does not explicitly identify itself as Remote and has no native usage tool now receives a clickable ChatGPT/Codex usage dashboard link immediately, without any tool call. Explicitly identified Remote sessions still make exactly one native read when available and never show the dashboard link on Remote failure.
 
 Usage has no hosted service and does not collect credentials or usage history. End-to-end response time depends on ChatGPT, the network, Remote transport, and host state; the plugin adds no deliberate wait or retry.
 
@@ -61,5 +61,5 @@ Usage has no hosted service and does not collect credentials or usage history. E
 - Sign in to the OpenAI Platform organization that owns the existing Usage listing.
 - Confirm **Apps Management: Write** permission.
 - Preserve the existing plugin ID and listing identity.
-- Upload the validated v0.3.1 skills bundle and confirm the automated scan passes.
+- Upload the validated v0.3.2 skills bundle and confirm the automated scan passes.
 - Review the compatibility disclosure, countries or regions, and policy attestations before publication.
