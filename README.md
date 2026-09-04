@@ -1,16 +1,16 @@
-# ChatGPT Usage Plugin
+# Usage
 
-Usage Checker is a privacy-conscious, read-only plugin for checking ChatGPT Work and Codex subscription usage from ChatGPT mobile through a connected desktop host.
+Usage is a privacy-conscious, read-only plugin for checking ChatGPT Work and Codex subscription usage from ChatGPT mobile through a connected desktop host.
 
 ## How it works
 
-ChatGPT Remote runs the request on your own Mac or Windows ChatGPT desktop/Codex host. Usage Checker makes one native account-usage read on that host and returns verified limits, credits, and reset times directly in the phone conversation.
+ChatGPT Remote runs the request on your own Mac or Windows ChatGPT desktop/Codex host. Usage makes one native account-usage read on that host and returns verified limits, credits, and reset times directly in the phone conversation.
 
-Usage Checker has no backend service and does not receive your ChatGPT credentials or usage history.
+Usage has no backend service and does not receive your ChatGPT credentials or usage history.
 
 ## One-time setup
 
-1. Install **Usage Checker** from the public ChatGPT Plugins Directory.
+1. Install **Usage** from the public ChatGPT Plugins Directory.
 2. Install or update the ChatGPT desktop app on a Mac or Windows PC.
 3. Sign in on the computer and phone with the same ChatGPT account and workspace.
 4. On the computer, open **Settings > Connections > Control this Mac or PC** and enable Remote.
@@ -25,16 +25,18 @@ Remote availability can depend on OpenAI rollout and workspace administrator pol
 2. Open or start a conversation on the connected desktop host.
 3. Use the invocation for that conversation:
    - In a Remote Codex conversation, enter `$usage`.
-   - In a Remote ChatGPT or ChatGPT Work conversation, select `@Usage Checker`.
+   - In a Remote ChatGPT or ChatGPT Work conversation, select `@Usage`.
    - You can also ask naturally, for example `check my usage`.
 
-The result appears inline. Usage Checker does not open a browser, search the web, retry, or take you away from ChatGPT.
+The result appears inline. Usage does not open a browser, search the web, retry, or take you away from ChatGPT.
 
-## Unsupported conversations
+## When the chat is not Remote
 
-Ordinary cloud-only ChatGPT conversations do not currently expose the required native usage capability. In that environment Usage Checker immediately says:
+Ordinary cloud-only ChatGPT conversations do not currently expose the required native usage capability. Only when the conversation is confirmed not to be Remote, Usage makes no tool call and immediately returns this clickable link in chat:
 
-> Usage Checker needs a ChatGPT Remote conversation connected to a running desktop Codex host.
+> [Open your ChatGPT/Codex usage dashboard](https://chatgpt.com/codex/settings/usage).
+
+If the conversation is Remote but the host capability is unavailable, or if Remote status is unknown, Usage instead returns immediate Remote guidance and does not show the dashboard link.
 
 ## Install from GitHub for development
 
@@ -48,7 +50,7 @@ Start a new Codex session and invoke `$usage`. GitHub installation is for develo
 ## Data and security
 
 - One read-only host-native usage call per successful request.
-- No Usage Checker accounts, backend, analytics, cookies, or credential storage.
+- No Usage accounts, backend, analytics, cookies, or credential storage.
 - No passwords, session cookies, access tokens, API keys, recovery codes, or multifactor codes are requested.
 - No plan changes, credit purchases, or usage-reset actions.
 - OpenAI API billing and token analytics are separate and out of scope.

@@ -13,7 +13,7 @@ Before opening an issue, include:
 - whether the host was running, online, and awake;
 - the exact error text with credentials and private account details removed.
 
-Usage Checker supports live mobile checks through ChatGPT Remote. Ordinary cloud-only ChatGPT conversations do not currently expose the required host-native usage capability.
+Usage supports live mobile checks through ChatGPT Remote. Ordinary cloud-only ChatGPT conversations do not currently expose the required host-native usage capability. When a conversation is confirmed not to be Remote, the plugin provides a clickable link to the ChatGPT/Codex usage dashboard instead of attempting a tool call. If a Remote conversation cannot expose the required host-native usage capability, the plugin returns immediate Remote guidance without the dashboard link.
 
 Never post passwords, cookies, tokens, API keys, recovery codes, two-factor codes, screenshots containing private account data, or billing information.
 

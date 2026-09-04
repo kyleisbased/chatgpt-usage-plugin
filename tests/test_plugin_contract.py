@@ -18,6 +18,7 @@ REMOTE_GUIDANCE = (
     "Usage Checker needs a ChatGPT Remote conversation connected to a "
     "running desktop Codex host."
 )
+DASHBOARD_URL = "https://chatgpt.com/codex/settings/usage"
 
 
 class UsageCheckerContractTests(unittest.TestCase):
@@ -56,7 +57,7 @@ class UsageCheckerContractTests(unittest.TestCase):
 
         for phrase in [
             "in a remote codex conversation, enter `$usage`",
-            "in a remote chatgpt or chatgpt work conversation, select `@usage checker`",
+            "in a remote chatgpt or chatgpt work conversation, select `@usage`",
             "natural-language requests can invoke this skill implicitly",
         ]:
             self.assertIn(phrase, instructions)
@@ -65,12 +66,12 @@ class UsageCheckerContractTests(unittest.TestCase):
         required_phrases = {
             README: [
                 "in a remote codex conversation, enter `$usage`",
-                "in a remote chatgpt or chatgpt work conversation, select `@usage checker`",
+                "in a remote chatgpt or chatgpt work conversation, select `@usage`",
                 "you can also ask naturally, for example `check my usage`",
             ],
             SUBMISSION: [
                 "`$usage` in a remote codex conversation",
-                "`@usage checker` in a remote chatgpt or chatgpt work conversation",
+                "`@usage` in a remote chatgpt or chatgpt work conversation",
                 "natural-language requests such as `check my usage` can invoke the skill implicitly",
             ],
         }
@@ -100,6 +101,11 @@ class UsageCheckerContractTests(unittest.TestCase):
                         lowered,
                         f"{path.name} must replace obsolete universal instruction {phrase!r}",
                     )
+
+        for path in [README, SUBMISSION]:
+            content = path.read_text(encoding="utf-8").lower()
+            self.assertNotIn("@usage checker", content)
+            self.assertNotIn("$usage-checker:usage", content)
 
     def test_mobile_path_forbids_diagnostic_fallbacks(self):
         instructions = SKILL.read_text(encoding="utf-8").lower()
@@ -147,7 +153,7 @@ class UsageCheckerContractTests(unittest.TestCase):
             instructions,
         )
 
-    def test_remote_first_release_is_0_3_0(self):
+    def test_release_is_0_3_1_with_short_public_name(self):
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
         combined = " ".join(
             [
@@ -158,19 +164,43 @@ class UsageCheckerContractTests(unittest.TestCase):
             ]
         ).lower()
 
-        self.assertEqual("0.3.0", manifest["version"])
+        self.assertEqual("usage-checker", manifest["name"])
+        self.assertEqual("0.3.1", manifest["version"])
+        self.assertEqual("Usage", manifest["interface"]["displayName"])
         self.assertIn("remote", combined)
         self.assertIn("desktop", combined)
         self.assertNotIn("mcpServers", manifest)
         self.assertNotIn("apps", manifest)
 
-    def test_public_docs_describe_remote_without_dashboard_fallback(self):
+    def test_non_remote_path_links_dashboard_without_tools(self):
+        instructions = SKILL.read_text(encoding="utf-8")
+        lowered = instructions.lower()
+
+        self.assertEqual(1, instructions.count(DASHBOARD_URL))
+        self.assertIn("## Non-Remote fallback", instructions)
+        non_remote = instructions.split("## Non-Remote fallback", 1)[1]
+        remote_path = instructions.split("## Non-Remote fallback", 1)[0]
+
+        self.assertIn(
+            f"[Open your ChatGPT/Codex usage dashboard]({DASHBOARD_URL})",
+            non_remote,
+        )
+        self.assertIn("confirmed not to be remote", non_remote.lower())
+        self.assertIn("do not call any tool", non_remote.lower())
+        self.assertIn("if remote status is unknown", non_remote.lower())
+        self.assertIn("do not show the dashboard link", non_remote.lower())
+        self.assertNotIn(DASHBOARD_URL, remote_path)
+        self.assertIn("do not show the dashboard link", lowered)
+
+    def test_public_docs_describe_remote_and_non_remote_paths(self):
         required_phrases = {
             README: [
                 "chatgpt remote runs the request on your own",
                 "same chatgpt account and workspace",
                 "running, online, and awake",
-                "@usage checker",
+                "@usage",
+                "confirmed not to be remote",
+                DASHBOARD_URL,
             ],
             PRIVACY: [
                 "chatgpt remote runs usage checker on the user's connected",
@@ -186,6 +216,8 @@ class UsageCheckerContractTests(unittest.TestCase):
                 "compatibility:",
                 "chatgpt mobile remote with a running, online, awake mac or windows chatgpt desktop/codex host using the same account and workspace.",
                 REMOTE_GUIDANCE.lower(),
+                "confirmed not to be remote",
+                DASHBOARD_URL,
             ],
         }
 
@@ -193,8 +225,6 @@ class UsageCheckerContractTests(unittest.TestCase):
             lowered = path.read_text(encoding="utf-8").lower()
             for phrase in phrases:
                 self.assertIn(phrase, lowered, f"{path.name} must contain {phrase!r}")
-            self.assertNotIn("chatgpt.com/codex/settings/usage", lowered)
-            self.assertNotIn("dashboard fallback", lowered)
 
     def test_plugin_manifest_points_to_an_existing_skill_directory(self):
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))

@@ -10,20 +10,28 @@ Report current ChatGPT Work and Codex subscription usage from the signed-in user
 ## Invocation
 
 - In a Remote Codex conversation, enter `$usage`.
-- In a Remote ChatGPT or ChatGPT Work conversation, select `@Usage Checker`.
+- In a Remote ChatGPT or ChatGPT Work conversation, select `@Usage`.
 - Natural-language requests can invoke this skill implicitly, such as `check my usage`.
 
 ## Remote-first execution
 
-This workflow has one data path. If this ChatGPT Remote conversation exposes a dedicated signed-in account-usage or usage-limits tool, make a host-native, read-only account-usage call. Call it exactly once and answer from that result.
+Use the conversation's host or surface context to determine whether it is Remote. Do not infer that a conversation is non-Remote merely because a tool is absent. If the conversation is confirmed not to be Remote, follow **Non-Remote fallback** below.
+
+In a confirmed ChatGPT Remote conversation, if a dedicated signed-in account-usage or usage-limits tool is exposed, make a host-native, read-only account-usage call. Call it exactly once and answer from that result.
 
 Do not browse. Do not search the web. Do not inspect GitHub. Do not search for the plugin. Do not open an account dashboard. Do not retry, refresh, poll, or wait. Do not start interactive sign-in. Do not attempt to discover, install, reload, repair, or diagnose plugin capabilities. Do not use shell or computer-use tools.
 
-If no signed-in account-usage tool is available, stop immediately. Say exactly: `Usage Checker needs a ChatGPT Remote conversation connected to a running desktop Codex host.` Do not call any tool on this path. Do not render an empty or `Not shown` table and do not claim that zero usage was found.
+If the conversation is Remote or its Remote status is unknown and no signed-in account-usage tool is available, stop immediately. Say exactly: `Usage Checker needs a ChatGPT Remote conversation connected to a running desktop Codex host.` Do not call any tool on this path. Do not render an empty or `Not shown` table and do not claim that zero usage was found. Do not show the dashboard link.
 
-If the single native call fails, stop. Say: `Usage Checker could not read usage from the connected host.` Include a short host-provided error only when it is safe and useful. Do not make a second call or try another source.
+If the single native call fails, stop. Say: `Usage Checker could not read usage from the connected host.` Include a short host-provided error only when it is safe and useful. Do not make a second call or try another source. Do not show the dashboard link.
 
 Do not use `platform.openai.com/usage` unless the user specifically asks about metered OpenAI API usage or spend. API billing is separate from ChatGPT Work and Codex subscription usage.
+
+## Non-Remote fallback
+
+Only when the conversation is confirmed not to be Remote, do not call any tool. Reply immediately: `This chat is not connected to Remote. [Open your ChatGPT/Codex usage dashboard](https://chatgpt.com/codex/settings/usage).`
+
+Provide the link in chat; do not open it for the user. If Remote status is unknown, do not show the dashboard link. Use the Remote guidance above instead.
 
 ## Capability and privacy
 
