@@ -9,6 +9,7 @@ PLUGIN = ROOT / "plugins" / "usage-checker"
 SKILL = PLUGIN / "skills" / "usage" / "SKILL.md"
 OPENAI_YAML = PLUGIN / "skills" / "usage" / "agents" / "openai.yaml"
 MANIFEST = PLUGIN / ".codex-plugin" / "plugin.json"
+ICON_SVG = PLUGIN / "assets" / "icon.svg"
 README = ROOT / "README.md"
 PRIVACY = ROOT / "PRIVACY.md"
 SUPPORT = ROOT / "SUPPORT.md"
@@ -111,7 +112,7 @@ class UsageCheckerContractTests(unittest.TestCase):
             self.assertNotIn("$usage-checker:usage", content)
 
     def test_public_product_name_is_usage(self):
-        for path in [README, PRIVACY, SUPPORT, TERMS, SUBMISSION, SKILL]:
+        for path in [README, PRIVACY, SUPPORT, TERMS, SUBMISSION, SKILL, ICON_SVG]:
             content = path.read_text(encoding="utf-8")
             self.assertNotIn(
                 "Usage Checker",
